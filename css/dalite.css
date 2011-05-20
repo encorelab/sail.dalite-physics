@@ -1,0 +1,111 @@
+#join-dialog {
+  width: 300px;
+  margin: auto;
+  padding: 12px;
+  text-align: center;
+}
+
+#guess-panel {
+  position: absolute;
+  bottom: 0px;
+  left: 25%;
+  right: 25%;
+  padding: 10px;
+  text-align: center;
+  border-bottom: none;
+  z-index: 100;
+}
+
+#guess {
+  font-size: 150%;
+  text-align: center;
+  width: 70%;
+}
+
+#set-word-panel {
+  position: absolute;
+  top: 40%;
+  left: 25%;
+  right: 25%;
+  padding: 10px;
+  text-align: center;
+  z-index: 100;
+}
+
+#set-word {
+  font-size: 150%;
+  width: 70%;
+  text-align: center;
+}
+
+#connecting {
+  position: absolute;
+  top: 40%;
+  left: 40%;
+  right: 40%;
+  text-align: center;
+  font-weight: bold;
+}
+
+#username {
+  font-weight: bold;
+}
+
+#definition {
+  font-size: 2.5em;
+  margin: 10%;
+  text-align: center;
+  font-family: Georgia, serif;
+  color: #00b;
+  font-weight: bold;
+}
+
+#winner {
+  font-size: 54pt;
+  margin: 10%;
+  text-align: center;
+  color: red;
+  font-weight: bold;
+}
+
+#winner-username {
+  font-size: 64pt;
+}
+
+#field {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 60px;
+  bottom: 100px;
+  z-index: 99;
+}
+
+.guess-baloon {
+  position: absolute;
+  padding: 8px;
+  border-radius: 15px;
+  background-color: rgba(256,256,256,0.7);
+  box-shadow: rgba(0,0,128,0.25) 3px 3px 4px;
+}
+
+.guess-baloon:hover {
+  cursor: pointer;
+}
+
+.guess-baloon .word {
+  font-size: 24pt;
+  text-align: center;
+  font-weight: bold;
+  color: #f30;
+}
+
+.guess-baloon .player {
+  font-size: 14pt;
+  text-align: right;
+  font-weight: bold;
+}
+
+input.in-progress {
+  background: url(/loader.gif) no-repeat 2px 2px white;
+}

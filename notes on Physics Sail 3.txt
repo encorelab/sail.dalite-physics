@@ -1,0 +1,20 @@
+Physics stuff for S3
+                                      
+- To log in, I can go to http://rollcall.proto.encorelab.org/   (for users go to: http://rollcall.proto.encorelab.org/users)
+	- In case my username is not working try updating the user/pass to update Jabberdy users
+- use Adium to pretend you're an agent and send response messages
+- Come up with a message to "Send Answers" and the response will include all the info for the next question.
+- Come up with a way to capture the "Receiving Message" and react to it
+- You can change the room you're talking in by:
+	- Creating a room in Adium (File -> Group Chat)
+	- And modify the Jabberdy.js (or its equivalent) and refresh your page so nothing is cached
+- Chcek out the latest code		
+	- Make a directory for your new app
+	- run 'git init'
+	- copy over: 'cp .gitmodules ../dalite-physics/'
+	- When you create a new project run
+		- git submodule add git@github.com:educoder/sail.js.git js/sail.js
+		- git submodule add git@github.com:educoder/sail.rb.git agents/sail.rb
+	- When you want to update to the latest Sail libraries
+		- git submodule update
+	
