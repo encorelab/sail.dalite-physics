@@ -1,3 +1,4 @@
+/* CSS for student homework page */
 div#topRow {   
 	float: left;
 	width: 900px;
@@ -40,8 +41,39 @@ div#submit {
 	margin-left: 20px;
 	margin-top: 190px;	
 }
+   
 
+/* CSS for Teach Dashboard */
+              
+div#welcomeDiv {
+	margin-top: 50px;
+	margin-left: 50px;
+}    
+                      
+/* containing all groups and their answered/unanswered questions */
+table#groupTable {
+	margin-top: 50px;
+	margin-left: 50px; 
+	cellpadding: 25px;   
+	width: 400px;
+	float: left;
+}   
+    
+/* This div is what changes color as groups answer questions */
+td.questionCell {
+	width: 50px;
+	height: 50px;
+    background-color: #999999;   
+	color: white;
+	text-align: center;
+}         
 
+div#answerToSelectedQuestion {
+	float: right;
+	margin-top: 50px;
+	margin-right: 50px;
+	width: 400px;
+}
 
 
 /*#join-dialog {

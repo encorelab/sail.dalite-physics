@@ -28,7 +28,8 @@ Dalite = {
         $('#play').click(function() {$(Dalite).trigger('choseToPlay')})
         $('#watch').click(function() {$(Dalite).trigger('choseToWatch')})
   
-		$('#submitButton').click(function() {Dalite.submitAnswer();})
+		$('#submitButton').click(function() {Dalite.submitAnswer();})   
+		$('.questionCell').live('click', function(ev) {Dalite.showAnswer(ev);})   
         
         $('#guess-form').submit(function() {Dalite.submitGuess(); return false})
         
@@ -100,6 +101,14 @@ Dalite = {
 	        Dalite.groupchat.sendEvent(sev);   
 	        $(Dalite).trigger('questionAnswered'); 
 		}
+	},  
+	  
+	     
+	// When the teacher clicks a specific question, the answer provided by the group is shown
+	showAnswer : function (ev) {    
+		selectedQuestionCellId = ev.target.parentNode.id;
+		answerDiv = 'td#'+selectedQuestionCellId+' div#questionAnswer';   
+		$('div#answerToSelectedQuestion').html($(answerDiv).html());
 	},
 	
     
@@ -123,9 +132,15 @@ Dalite = {
     
     events: {
         // mapping of Sail events to local Javascript events
-        sail: {               
-			'questionReceived' : 'gotQuestion', 
-			'done' : 'gotDone',
+        sail: {  
+	        // multiple choice question is received by the client
+			'questionReceived' : 'gotQuestion',     
+			// individual done with all the question
+			'done' : 'gotDone', 
+			// teacher dashboard received all the groups  
+			'groupsReceived' : 'gotGroups',  
+			// teacher dashboard received an answer
+			'groupQuestionAnswered' : 'gotGroupAnswer',
             'guess': 'gotGuess',
             'set_definition': 'gotNewDefinition',
             'wrong': 'gotWrongGuess',
@@ -189,8 +204,9 @@ Dalite = {
 			// $('button#submitButton').css('color' : 'black');  
 	    	$('button#submitButton span').html('Sent...');    
 			
-		},  
-		
+		},
+		  
+		// When individuals receive a question
 		onGotQuestion: function (ev, sev) {
 			questionURL = sev.payload.questionURL;     
 			tags = sev.payload.tags;
@@ -215,9 +231,61 @@ Dalite = {
 			// alert (choiceDiv);
 		}, 
 		
+		// When an individual is done with all their questions and the agent notifies them
 		onGotDone : function(ev, sev) {    
 			$('div#topRow').html("<div style='margin-top: 50px; margin-left: 50px'>Congratulations! You're Finished</div>");
 			$('div#bottomRow').html("");		
+		}, 
+		
+		onGotGroups : function (ev, sev) {
+			groups = sev.payload.groups;
+			totalQuestions = sev.payload.totalQuestions;   
+			   
+			groupTable = $('table#groupTable');
+			for (i=1; i <= groups.length; i++){ 
+				curGroupRow = $('<tr class="groupRow" id="gr'+i+'">');
+				curGroupRow.append($('<td> Group ' +i+ '</td>'));
+				for (j=1; j <= totalQuestions; j++) {
+					curQuestionCell = $('<td class="questionCell" id="gr'+i+'_q'+j+'">');
+					curQuestionCell.append($('<div id="questionNumber">'+j+'</div>'));
+					curQuestionCell.append($('<div id="questionAnswer"></div>')); 
+					curQuestionCell.append($('</td>'));
+					curGroupRow.append(curQuestionCell);
+				}
+                curGroupRow.append('</tr>');
+				groupTable.append(curGroupRow);
+			}
+			groupTable.append($('</table>'));
+		},   
+		
+		onGotGroupAnswer : function (ev, sev){    
+			groupNumber = sev.payload.groupNumber;
+			questionNumber = sev.payload.questionNumber;    
+			questionURL = sev.payload.questionURL;
+			answeredCorrectly = sev.payload.answeredCorrectly; 
+			correctAnswer = sev.payload.correctAnswer;
+			answer = sev.payload.groupAnswer;
+			rationale = sev.payload.rationale;
+			
+			answeredQuestionCellId = 'gr'+groupNumber+'_q'+questionNumber;
+			answeredQuestionCell = $('td#'+answeredQuestionCellId);  
+			   
+			// We need to populate a div (inside the question block) so that when the teacher clicks on a 
+			// qeustion, they can see the question and the group's answer
+			questionAnswer = $('td#'+answeredQuestionCellId+' div#questionAnswer');
+			questionImage = $('<img src="'+questionURL+'"/>');
+			questionAnswer.html(questionImage);
+			questionAnswer.append("<div>Group Answer: "+answer+ "<br/>Correct Answer: "+correctAnswer+"<br/>Rationale: "+rationale+"</div>")
+			questionAnswer.css ('display', 'none');
+			
+			
+			// color the question block on the grid according to the answer submitted
+			if (answeredCorrectly == "true"){
+				$(answeredQuestionCell).css('background-color', 'green');
+			}else {
+				$(answeredQuestionCell).css('background-color', 'red');				
+			}
+			
 		},
             
         onGotNewDefinition: function(ev, sev) {
