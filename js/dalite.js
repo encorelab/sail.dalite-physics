@@ -124,7 +124,8 @@ Dalite = {
     events: {
         // mapping of Sail events to local Javascript events
         sail: {               
-			'questionReceived' : 'gotQuestion',
+			'questionReceived' : 'gotQuestion', 
+			'done' : 'gotDone',
             'guess': 'gotGuess',
             'set_definition': 'gotNewDefinition',
             'wrong': 'gotWrongGuess',
@@ -212,6 +213,11 @@ Dalite = {
 				choiceDiv.append(choices[i]);
 			}  
 			// alert (choiceDiv);
+		}, 
+		
+		onGotDone : function(ev, sev) {    
+			$('div#topRow').html("<div style='margin-top: 50px; margin-left: 50px'>Congratulations! You're Finished</div>");
+			$('div#bottomRow').html("");		
 		},
             
         onGotNewDefinition: function(ev, sev) {
