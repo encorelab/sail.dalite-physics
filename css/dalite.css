@@ -1,4 +1,50 @@
-#join-dialog {
+div#topRow {   
+	float: left;
+	width: 900px;
+} 
+
+div#bottomRow {  
+	float: left;
+	width: 900px
+}             
+
+div#question {  
+	float: left;
+	width: 350px;
+	margin-left: 50px;	
+}        
+  
+div#tags {  
+	float: left;
+	width: 400px;
+	padding-top: 40px;
+	margin-left: 50px;
+}
+
+div#choices { 
+	float: left;
+	width: 400px;
+	margin-top: 50px;
+	margin-left: 50px;
+}    
+
+div#rationale {
+	float: left;
+	width: 700px;
+	margin-left: 50px;
+}        
+
+div#submit {
+	width: 100px;
+	float: left;
+	margin-left: 20px;
+	margin-top: 190px;	
+}
+
+
+
+
+/*#join-dialog {
   width: 300px;
   margin: auto;
   padding: 12px;
@@ -104,7 +150,7 @@
   font-size: 14pt;
   text-align: right;
   font-weight: bold;
-}
+}*/
 
 input.in-progress {
   background: url(/loader.gif) no-repeat 2px 2px white;

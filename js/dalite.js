@@ -16,10 +16,10 @@ Dalite = {
     
     
     // initialization (called in $(document).ready() at the bottom of this file)
-    
+
     init: function() {
         console.log("Initializing Dalite...")
-        
+
         // create custom event handlers for all Dalite 'on' methods
         Sail.autobindEvents(Dalite, {
             pre: function() {console.debug(arguments[0].type+'!',arguments)}
@@ -28,7 +28,7 @@ Dalite = {
         $('#play').click(function() {$(Dalite).trigger('choseToPlay')})
         $('#watch').click(function() {$(Dalite).trigger('choseToWatch')})
   
-		$('#submiteAnswer').click(Dalite.submitAnswer)
+		$('#submitButton').click(function() {Dalite.submitAnswer();})
         
         $('#guess-form').submit(function() {Dalite.submitGuess(); return false})
         
@@ -86,9 +86,18 @@ Dalite = {
     },   
               
 	// the name for this function should indicate an 'action'
-	submitAnswer: function () {
-		answer = $('#answer').text();
-		sev = new Sail.Event('answerToQuestion', {'answer' : answer} );     
+	submitAnswer: function () {    
+		tags = $(':checkbox').filter (':checked').map(function(){
+			return $(this).val();
+		});
+		choice = $(':radio:checked').val();
+		rationale = $('textarea#rationaleText').val();   
+		// Check to see an answer is chosen, at least one tag is selected and rationale is provided
+		if (tags.length == 0 || choice == null || rationale == ""){
+			alert ("You must submit a CHOICE, select at least one TAG and provide a RATIONALE");
+		}
+		
+		sev = new Sail.Event('questionAnswered', {'tags' : $.makeArray(tags), 'choice' : choice, 'rationale' : rationale} );     
         Dalite.groupchat.sendEvent(sev);   
         $(Dalite).trigger('questionAnswered'); 
 	},
@@ -114,25 +123,25 @@ Dalite = {
     
     events: {
         // mapping of Sail events to local Javascript events
-        sail: {
+        sail: {               
+			'questionReceived' : 'gotQuestion',
             'guess': 'gotGuess',
             'set_definition': 'gotNewDefinition',
             'wrong': 'gotWrongGuess',
             'bad_word': 'gotBadWord',
-            'win': 'gotWinner',
-			'greet': 'gotGreet'
+            'win': 'gotWinner'
         },
         
         // local Javascript event handlers
         onAuthenticated: function() {
             session = Dalite.session
-            console.log("Authenticated as: ", session.user.username, session.user.encrypted_password)
+            console.log("Authenticated as: ", session.account.login, session.account.encrypted_password)
         
-            $('#username').text(session.user.username)
+            $('#username').text(session.account.login)
         
-            Sail.Strophe.bosh_url = '/http-bind/'
-         	Sail.Strophe.jid = session.user.username + '@' + Dalite.xmppDomain
-          	Sail.Strophe.password = session.user.encrypted_password
+            Sail.Strophe.bosh_url = '/http-bind/'     
+         	Sail.Strophe.jid = session.account.login + '@' + Dalite.xmppDomain
+          	Sail.Strophe.password = session.account.encrypted_password
       	
           	Sail.Strophe.onConnectSuccess = function() {        
 	
@@ -174,8 +183,33 @@ Dalite = {
         },  
              
 		// the name should indicate an 'event' - past tense
-  		onQuestionAnswered: function () {
-	    	$('#answer').text('Submitted');
+  		onQuestionAnswered: function () {        
+			// $('button#submitButton').css('background-color' : 'gray');
+	    	$('button#submitButton').attr('value','Sent');
+		},  
+		
+		onGotQuestion: function (ev, sev) {
+			questionURL = sev.payload.questionURL;     
+			tags = sev.payload.tags;
+			choices = sev.payload.choices; 
+			   
+			// update the question with the new question
+			$('#questionImage').attr('src', questionURL); 
+			
+			//We need to dynamically create checkboxes for all the received tags
+			tagDiv = $('div#tags').html('<p>Tags</p>');  
+			for (i=0; i<tags.length; i++) {
+				tagDiv.append($('<input type="checkbox" name="'+tags[i]+'" value="'+tags[i]+'" />')); 
+				tagDiv.append(tags[i]);
+			}   
+			
+			//We need to dynamically create radio buttons for all the received choices
+			choiceDiv = $('div#choices').html('<p>Choices</p>');  
+		    for (i=0; i<choices.length; i++) {
+				choiceDiv.append($('<input type="radio" name="'+choices[i]+'" value="'+choices[i]+'" />')); 
+				choiceDiv.append(choices[i]);
+			}  
+			// alert (choiceDiv);
 		},
             
         onGotNewDefinition: function(ev, sev) {
@@ -228,15 +262,10 @@ Dalite = {
                 Dalite.askForNewWord()
             }
         },
-
-		onGotGreet: function(ev, sev){
-			greeting = sev.definition;   
-			$('#greeting-box').text(greeting);
-		},
     },
     
     
 }    
 
 
-$(document).ready(Dalite.init)
+
