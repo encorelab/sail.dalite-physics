@@ -94,12 +94,12 @@ Dalite = {
 		rationale = $('textarea#rationaleText').val();   
 		// Check to see an answer is chosen, at least one tag is selected and rationale is provided
 		if (tags.length == 0 || choice == null || rationale == ""){
-			alert ("You must submit a CHOICE, select at least one TAG and provide a RATIONALE");
+			alert ("You must submit a CHOICE, select at least one TAG and provide a RATIONALE");  
+		} else {		    
+			sev = new Sail.Event('questionAnswered', {'tags' : $.makeArray(tags), 'choice' : choice, 'rationale' : rationale} );     
+	        Dalite.groupchat.sendEvent(sev);   
+	        $(Dalite).trigger('questionAnswered'); 
 		}
-		
-		sev = new Sail.Event('questionAnswered', {'tags' : $.makeArray(tags), 'choice' : choice, 'rationale' : rationale} );     
-        Dalite.groupchat.sendEvent(sev);   
-        $(Dalite).trigger('questionAnswered'); 
 	},
 	
     
