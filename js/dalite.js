@@ -184,8 +184,10 @@ Dalite = {
              
 		// the name should indicate an 'event' - past tense
   		onQuestionAnswered: function () {        
-			// $('button#submitButton').css('background-color' : 'gray');
-	    	$('button#submitButton').attr('value','Sent');
+			$('button#submitButton').effect("highlight", {color:"#b1b1b1"}, 3000);  
+			// $('button#submitButton').css('color' : 'black');  
+	    	$('button#submitButton span').html('Sent...');    
+			
 		},  
 		
 		onGotQuestion: function (ev, sev) {
