@@ -134,13 +134,13 @@ Dalite = {
         // mapping of Sail events to local Javascript events
         sail: {  
 	        // multiple choice question is received by the client
-			'questionReceived' : 'gotQuestion',     
+			'question_assigned' : 'gotQuestion',     
 			// individual done with all the question
 			'done' : 'gotDone', 
 			// teacher dashboard received all the groups  
-			'groupsReceived' : 'gotGroups',  
+			'groups_received' : 'gotGroups',  
 			// teacher dashboard received an answer
-			'groupQuestionAnswered' : 'gotGroupAnswer',
+			'group_question_answered' : 'gotGroupAnswer',
             'guess': 'gotGuess',
             'set_definition': 'gotNewDefinition',
             'wrong': 'gotWrongGuess',
@@ -174,7 +174,10 @@ Dalite = {
           	Sail.Strophe.connect()
         },
     
-        onJoined: function() {
+        onJoined: function() {       
+			sev = new Sail.Event('joined', {'who': Sail.Strophe.jid})
+	        Dalite.groupchat.sendEvent(sev)
+	
             $(Dalite).trigger('choosingWhetherToWatchOrPlay')
             Dalite.ui.showDialog('#join-dialog')
         },
