@@ -214,7 +214,10 @@ Dalite = {
 			questionURL = sev.payload.questionURL;     
 			tags = sev.payload.tags;
 			choices = sev.payload.choices; 
-			   
+			                                         
+			$('textArea#rationaleText').val('');
+	    	$('button#submitButton span').html('Submit');
+			
 			// update the question with the new question
 			$('#questionImage').attr('src', questionURL); 
 			
