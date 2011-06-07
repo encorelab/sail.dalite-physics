@@ -2,7 +2,7 @@ $: << "sail.rb/lib"
 require 'sail/daemon'
 
 @daemon = Sail::Daemon.spawn(
-  :name => "jabberdy",
+  :name => "dalite-physics",
   :path => '.',
   :verbose => true
 )
