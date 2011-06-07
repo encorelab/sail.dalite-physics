@@ -23,7 +23,7 @@ class Inquisitor < Sail::Agent
     
     @mongo = Mongo::Connection.new.db('dalite-physics')
     
-    @arlo = RestClient::Resource.new('http://localhost:3001')
+    @arlo = RestClient::Resource.new(CMS_BASE_URL)
   end
   
   def logic
