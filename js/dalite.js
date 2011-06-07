@@ -101,7 +101,7 @@ Dalite = {
 		if (tags.length == 0 || choice == null || rationale == ""){
 			alert ("You must submit a CHOICE, select at least one TAG and provide a RATIONALE");  
 		} else {		    
-			sev = new Sail.Event('questionAnswered', {'questionID' : questionID, 'chosenTags' : $.makeArray(tags), 'choice' : choice, 'rationale' : rationale} );     
+			sev = new Sail.Event('question_answered', {'questionID' : questionID, 'chosenTags' : $.makeArray(tags), 'choice' : choice, 'rationale' : rationale} );     
 	        Dalite.groupchat.sendEvent(sev);   
 	        $(Dalite).trigger('questionAnswered'); 
 		}
