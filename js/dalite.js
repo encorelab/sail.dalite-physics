@@ -4,7 +4,8 @@ Dalite = {
     rollcallURL: 'http://rollcall.proto.encorelab.org',
     xmppDomain: 'proto.encorelab.org',
     //groupchatRoom: 's3@conference.proto.encorelab.org',
-	groupchatRoom: 'physics@conference.proto.encorelab.org',
+	//groupchatRoom: 'physics@conference.proto.encorelab.org',
+	groupchatRoom: 'run-2@conference.proto.encorelab.org',
     
     
     // private global vars
@@ -122,7 +123,6 @@ Dalite = {
 		  url: 'http://rollcall.proto.encorelab.org/runs/'+run_id+'/groups.json?kind='+kind,
 		  success: function(data) { 
 			    groups = data;
-				console.log(groups[0]);
 				
 				groupTable = $('table#groupTable');
 				for (i=1; i <= groups.length; i++){ 
