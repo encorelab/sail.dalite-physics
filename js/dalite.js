@@ -295,7 +295,7 @@ Dalite = {
 			//We need to dynamically create radio buttons for all the received choices
 			choiceDiv = $('div#choices').html('<p><b>Choices</b></p>');  
 		    for (i=0; i<choices.length; i++) {            
-				choiceDiv.append($('<input type="radio" group=q'+$('#questionID')+' name="'+choices[i]+'" value="'+choices[i]+'" />')); 
+				choiceDiv.append($('<input type="radio" name="'+$('#questionID').html()+'" value="'+choices[i]+'" />')); 
 				choiceDiv.append(choices[i]);
 			}  
 			// alert (choiceDiv);
