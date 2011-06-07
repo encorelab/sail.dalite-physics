@@ -4,8 +4,8 @@ Dalite = {
     rollcallURL: 'http://rollcall.proto.encorelab.org',
     xmppDomain: 'proto.encorelab.org',
     //groupchatRoom: 's3@conference.proto.encorelab.org',
-	//groupchatRoom: 'physics@conference.proto.encorelab.org',
-	groupchatRoom: 'run-2@conference.proto.encorelab.org',
+	groupchatRoom: 'physics@conference.proto.encorelab.org',
+	// groupchatRoom: 'run-2@conference.proto.encorelab.org',
     
     
     // private global vars
@@ -276,11 +276,22 @@ Dalite = {
 			$('#questionImage').attr('src', questionURL); 
 			
 			//We need to dynamically create checkboxes for all the received tags
-			tagDiv = $('div#tags').html('<p>Tags</p>');  
+			tagDiv = $('div#tags').html('<p>Tags</p>');   
+			table = $('<table>');
 			for (i=0; i<tags.length; i++) {
-				tagDiv.append($('<input type="checkbox" name="'+tags[i]+'" value="'+tags[i]+'" />')); 
-				tagDiv.append(tags[i]);
-			}   
+				if (i % 2 == 0){         
+					curTr = $('<tr>');
+				}                 
+				// tagDiv.append($('<td>' + $('<input type="checkbox" name="'+tags[i]+'" value="'+tags[i]+'" />') + tags[i] + '</td>'));
+				curTd = $('<td>');
+				curTd.append($('<input type="checkbox" name="'+tags[i]+'" value="'+tags[i]+'" />'));   
+				curTd.append(tags[i]);   
+				curTr.append(curTd);                                                              
+				if ((i > 0 && (i % 2 == 1)) || (i == tags.length-1)){
+					table.append(curTr);
+				} 
+			}      
+			tagDiv.append(table);
 			
 			//We need to dynamically create radio buttons for all the received choices
 			choiceDiv = $('div#choices').html('<p>Choices</p>');  
