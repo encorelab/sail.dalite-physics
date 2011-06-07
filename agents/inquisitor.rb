@@ -215,11 +215,17 @@ class Inquisitor < Sail::Agent
     
     choices = ('A'..q['choice_limit']).to_a
     
+    answers = @mongo['answers']
+    past_answers = answers.find('question_id' => q['id'].to_s).collect do |pa|
+      {'rationale' => pa['rationale'], 'tags' => pa['tags'], 'choice' => pa['choice']}
+    end
+    
     data = {
       'questionID' => q['id'],
       'questionURL' => CMS_BASE_URL + q['image_path'],
       'tags' => tags.collect{|t| t['name']},
-      'choices' => choices
+      'choices' => choices,
+      'past_answers' => past_answers
     }
     
     event!(:question_assigned, data, :to => u.jid)
