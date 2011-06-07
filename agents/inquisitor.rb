@@ -1,7 +1,3 @@
-RUN_ID = 2
-SAIL_ENV = :production
-CMS_BASE_URL = "http://localhost:3001"
-
 require 'rest_client'
 require 'uri'
 require 'mongo'
@@ -30,7 +26,7 @@ class Inquisitor < Sail::Agent
     @arlo = RestClient::Resource.new('http://localhost:3001')
   end
   
-  def vitalize
+  def logic
     when_ready do
       pres = Blather::Stanza::Presence::Status.new
       pres.to = agent_jid_in_room
@@ -58,8 +54,8 @@ class Inquisitor < Sail::Agent
             log "#{u} is not yet in an expertise group... will randomly assign one..."
             u.randomly_assign_to_expertise_group!
             u.reload
-            exp_groups = u.current_expertise_groups
-            log "#{u} is now in expertise group: #{u.current_expertise_groups}"
+            exp_group = u.current_expertise_group
+            log "#{u} is now in expertise group: #{u.current_expertise_group}"
           end
 
           do_homework(u)
@@ -161,7 +157,7 @@ class Inquisitor < Sail::Agent
     log "#{u} has so far answered #{past_answers.count} questions"
     
     if past_answers.count >= 5
-      event!(:done, {})
+      event!(:done, {}, :to => u.jid)
     else
       last_id = u.last_unanswered_question_id
     
@@ -170,7 +166,7 @@ class Inquisitor < Sail::Agent
         unless q
           log "question #{last_id.inspect} was not found in the CMS!", :ERROR
         end
-        log "#{u} is already on question #{q['id']}"
+        log "#{u} is on question #{q['id']}"
       else
         q = randomly_pick_unanswered_question_for_user(u)
       end
@@ -208,11 +204,17 @@ class Inquisitor < Sail::Agent
     #   "tags":["Newton","Gravity","Intertia"],
     #   "choices":["A","B","C"]}}
     
+    query = "Question.find(#{q['id']}).tags"
+    tags = JSON.parse(@arlo['query.json?query='+CGI.escape(query)].get)['payload'].
+         collect{|t| t['tag']}
+    
+    choices = ('A'..q['choice_limit']).to_a
+    
     data = {
       'questionID' => q['id'],
       'questionURL' => CMS_BASE_URL + q['image_path'],
-      'tags' => ["Newton","Gravity","Intertia"],
-      'choices' => ["A","B","C"]
+      'tags' => tags.collect{|t| t['name']},
+      'choices' => choices
     }
     
     event!(:question_assigned, data, :to => u.jid)
@@ -222,11 +224,4 @@ class Inquisitor < Sail::Agent
     log "Assigned question #{q['id'].inspect} to #{u}."
   end
   
-end
-
-
-if __FILE__ == $0
-  inq = Inquisitor.new(:run_id => RUN_ID)
-  inq.vitalize
-  inq.run_em
 end

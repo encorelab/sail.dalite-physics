@@ -22,7 +22,11 @@ class User < Rollcall::User
   end
   
   def last_unanswered_question_id
-    self.metadata.last_unanswered_question_id
+    begin
+      self.metadata.last_unanswered_question_id
+    rescue NoMethodError
+      return nil
+    end
   end
   
   def homework_completed?
