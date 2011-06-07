@@ -2,7 +2,7 @@
 div#topRow {    
 	display: none;
 	float: left;
-	width: 900px;
+	width: 1200px;
 } 
 
 div#bottomRow {  
@@ -13,22 +13,24 @@ div#bottomRow {
 
 div#question {  
 	float: left;
-	width: 350px;
+	width: 550px;
 	margin-left: 50px;	
-}        
+}          
+
+img#questionImage {
+	width: 500px;
+}
   
 div#tags {  
 	float: left;
-	width: 400px;
+	width: 600px;
 	padding-top: 40px;
-	margin-left: 50px;
 }
 
 div#choices { 
 	float: left;
 	width: 400px;
-	margin-top: 50px;
-	margin-left: 50px;
+	margin-top: 50px; 
 }    
 
 div#rationale {
