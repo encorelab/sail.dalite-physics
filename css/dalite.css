@@ -82,6 +82,15 @@ div#answerToSelectedQuestion {
 	width: 400px;
 }
 
+.loader {
+  position: absolute;
+  top: 40%;
+  left: 40%;
+  right: 40%;
+  text-align: center;
+  font-weight: bold;
+}
+
 
 /*#join-dialog {
   width: 300px;
@@ -123,14 +132,7 @@ div#answerToSelectedQuestion {
   text-align: center;
 }
 
-#connecting {
-  position: absolute;
-  top: 40%;
-  left: 40%;
-  right: 40%;
-  text-align: center;
-  font-weight: bold;
-}
+
 
 #username {
   font-weight: bold;

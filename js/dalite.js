@@ -222,6 +222,8 @@ Dalite = {
 	
             $(Dalite).trigger('choosingWhetherToWatchOrPlay')
             Dalite.ui.showDialog('#join-dialog')
+            
+            $('#loading').show()
         },
     
         onChoseToPlay: function() {
@@ -251,7 +253,8 @@ Dalite = {
 		},
 		  
 		// When individuals receive a question
-		onGotQuestion: function (ev, sev) {     
+		onGotQuestion: function (ev, sev) {  
+		    $('#loading').hide()   
 			
 			if ($('#topRow').css('display') == "none")  {
 				$('#topRow').css('display', 'block');
