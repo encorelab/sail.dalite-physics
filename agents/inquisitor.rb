@@ -184,8 +184,13 @@ class Inquisitor < Sail::Agent
     log "Randomly selecting a new question for #{u} from #{exp}"
   
     query = "Question.find(:all, :conditions => {:expertise_id => #{exp.id}})"
-    questions = JSON.parse(@arlo['query.json?query='+CGI.escape(query)].get)['payload'].
-      collect{|q| q['question']}
+    
+    begin
+      questions = JSON.parse(@arlo['query.json?query='+CGI.escape(query)].get)['payload'].
+        collect{|q| q['question']}
+    rescue ActiveResource::ResourceNotFound => e
+      log "Couldn't find any questions for expertise with ID #{exp.id.inspect}!", :ERROR
+    end
   
     answered_ids = past_answers.collect{|pa| pa['question_id'].to_i}
     unanswered_questions = questions.select{|q| not answered_ids.include? q['id'].to_i}
