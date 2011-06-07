@@ -188,8 +188,8 @@ class Inquisitor < Sail::Agent
     begin
       questions = JSON.parse(@arlo['query.json?query='+CGI.escape(query)].get)['payload'].
         collect{|q| q['question']}
-    rescue ActiveResource::ResourceNotFound => e
-      log "Couldn't find any questions for expertise with ID #{exp.id.inspect}!", :ERROR
+    rescue => e
+      log "Error while querying CMS for questions in expertise ID #{exp.id.inspect}!: #{e}", :ERROR
     end
   
     answered_ids = past_answers.collect{|pa| pa['question_id'].to_i}
