@@ -30,6 +30,8 @@ Dalite = {
   
 		$('#submitButton').click(function() {Dalite.submitAnswer();})   
 		$('.questionCell').live('click', function(ev) {Dalite.showAnswer(ev);})   
+		
+		$('#loadGroups').click(function() {Dalite.loadGroups();})
         
         $('#guess-form').submit(function() {Dalite.submitGuess(); return false})
         
@@ -88,20 +90,59 @@ Dalite = {
               
 	// the name for this function should indicate an 'action'
 	submitAnswer: function () {    
+		questionID = $('#questionID').html();
 		tags = $(':checkbox').filter (':checked').map(function(){
 			return $(this).val();
-		});
+		});           
 		choice = $(':radio:checked').val();
 		rationale = $('textarea#rationaleText').val();   
 		// Check to see an answer is chosen, at least one tag is selected and rationale is provided
 		if (tags.length == 0 || choice == null || rationale == ""){
 			alert ("You must submit a CHOICE, select at least one TAG and provide a RATIONALE");  
 		} else {		    
-			sev = new Sail.Event('questionAnswered', {'tags' : $.makeArray(tags), 'choice' : choice, 'rationale' : rationale} );     
+			sev = new Sail.Event('questionAnswered', {'questionID' : questionID, 'chosenTags' : $.makeArray(tags), 'choice' : choice, 'rationale' : rationale} );     
 	        Dalite.groupchat.sendEvent(sev);   
 	        $(Dalite).trigger('questionAnswered'); 
 		}
 	},  
+	
+	// Loading all the groups for THIS RUN using a jquery call to RollCall
+	loadGroups: function() {               
+		
+		// hide the load groups button
+		$('#loadGroups').css('display', 'none');
+		
+		// we have currently hard-coded the 'run id' and 'kind'
+	  	var run_id = 2
+		var kind = "Expertise"  
+		var totalQuestions = 5
+
+		$.ajax({
+		  dataType: 'jsonp',
+		  url: 'http://rollcall.proto.encorelab.org/runs/'+run_id+'/groups.json?kind='+kind,
+		  success: function(data) { 
+			    groups = data;
+				console.log(groups[0]);
+				
+				groupTable = $('table#groupTable');
+				for (i=1; i <= groups.length; i++){ 
+					curGroupRow = $('<tr class="groupRow" id="gr'+i+'">');
+					curGroupRow.append($('<td> Group ' +i+ '</td>'));
+					for (j=1; j <= totalQuestions; j++) {
+						curQuestionCell = $('<td class="questionCell" id="gr'+i+'_q'+j+'">');
+						curQuestionCell.append($('<div class="questionNumber">'+j+'</div>'));
+						curQuestionCell.append($('<div id="questionAnswer"></div>')); 
+						curQuestionCell.append($('</td>'));
+						curGroupRow.append(curQuestionCell);
+					}
+		            curGroupRow.append('</tr>');
+					groupTable.append(curGroupRow);
+				}
+			groupTable.append($('</table>'));
+		  }
+		})  
+		
+	},
 	  
 	     
 	// When the teacher clicks a specific question, the answer provided by the group is shown
@@ -137,8 +178,9 @@ Dalite = {
 			'question_assigned' : 'gotQuestion',     
 			// individual done with all the question
 			'done' : 'gotDone', 
-			// teacher dashboard received all the groups  
-			'groups_received' : 'gotGroups',  
+			// teacher dashboard received all the groups  -- WE removed this event and decided the client should get the groups from RollCall
+			// 'groups_received' : 'gotGroups',                                                                  
+			
 			// teacher dashboard received an answer
 			'group_question_answered' : 'gotGroupAnswer',
             'guess': 'gotGuess',
@@ -204,17 +246,29 @@ Dalite = {
 		// the name should indicate an 'event' - past tense
   		onQuestionAnswered: function () {        
 			$('button#submitButton').effect("highlight", {color:"#b1b1b1"}, 3000);  
-			// $('button#submitButton').css('color' : 'black');  
 	    	$('button#submitButton span').html('Sent...');    
 			
 		},
 		  
 		// When individuals receive a question
-		onGotQuestion: function (ev, sev) {
+		onGotQuestion: function (ev, sev) {     
+			
+			if ($('#topRow').css('display') == "none")  {
+				$('#topRow').css('display', 'block');
+			}                                     
+			
+			if ($('#bottomRow').css('display') == "none")  {
+				$('#bottomRow').css('display', 'block');
+			}
+			 
+			curQuestionID = sev.payload.questionID;
 			questionURL = sev.payload.questionURL;     
 			tags = sev.payload.tags;
 			choices = sev.payload.choices; 
-			                                         
+			                                    
+			// we need to save the current question's id in a hidden field to send when question answered
+			$('#questionID').html(curQuestionID);
+			     
 			$('textArea#rationaleText').val('');
 	    	$('button#submitButton span').html('Submit');
 			
@@ -230,8 +284,8 @@ Dalite = {
 			
 			//We need to dynamically create radio buttons for all the received choices
 			choiceDiv = $('div#choices').html('<p>Choices</p>');  
-		    for (i=0; i<choices.length; i++) {
-				choiceDiv.append($('<input type="radio" name="'+choices[i]+'" value="'+choices[i]+'" />')); 
+		    for (i=0; i<choices.length; i++) {            
+				choiceDiv.append($('<input type="radio" group=q'+$('#questionID')+' name="'+choices[i]+'" value="'+choices[i]+'" />')); 
 				choiceDiv.append(choices[i]);
 			}  
 			// alert (choiceDiv);
@@ -242,34 +296,36 @@ Dalite = {
 			$('div#topRow').html("<div style='margin-top: 50px; margin-left: 50px'>Congratulations! You're Finished</div>");
 			$('div#bottomRow').html("");		
 		}, 
-		
-		onGotGroups : function (ev, sev) {
-			groups = sev.payload.groups;
-			totalQuestions = sev.payload.totalQuestions;   
-			   
-			groupTable = $('table#groupTable');
-			for (i=1; i <= groups.length; i++){ 
-				curGroupRow = $('<tr class="groupRow" id="gr'+i+'">');
-				curGroupRow.append($('<td> Group ' +i+ '</td>'));
-				for (j=1; j <= totalQuestions; j++) {
-					curQuestionCell = $('<td class="questionCell" id="gr'+i+'_q'+j+'">');
-					curQuestionCell.append($('<div id="questionNumber">'+j+'</div>'));
-					curQuestionCell.append($('<div id="questionAnswer"></div>')); 
-					curQuestionCell.append($('</td>'));
-					curGroupRow.append(curQuestionCell);
-				}
-                curGroupRow.append('</tr>');
-				groupTable.append(curGroupRow);
-			}
-			groupTable.append($('</table>'));
-		},   
+		    
+		// We have decided to eliminate this and instead make the client fetch the groups from RollCall
+		// onGotGroups : function (ev, sev) {
+		// 	groups = sev.payload.groups;
+		// 	totalQuestions = sev.payload.totalQuestions;   
+		// 	   
+		// 	groupTable = $('table#groupTable');
+		// 	for (i=1; i <= groups.length; i++){ 
+		// 		curGroupRow = $('<tr class="groupRow" id="gr'+i+'">');
+		// 		curGroupRow.append($('<td> Group ' +i+ '</td>'));
+		// 		for (j=1; j <= totalQuestions; j++) {
+		// 			curQuestionCell = $('<td class="questionCell" id="gr'+i+'_q'+j+'">');
+		// 			curQuestionCell.append($('<div class="questionNumber">'+j+'</div>'));
+		// 			curQuestionCell.append($('<div id="questionAnswer"></div>')); 
+		// 			curQuestionCell.append($('</td>'));
+		// 			curGroupRow.append(curQuestionCell);
+		// 		}
+		//                 curGroupRow.append('</tr>');
+		// 		groupTable.append(curGroupRow);
+		// 	}
+		// 	groupTable.append($('</table>'));
+		// },   
 		
 		onGotGroupAnswer : function (ev, sev){    
-			groupNumber = sev.payload.groupNumber;
-			questionNumber = sev.payload.questionNumber;    
+			groupNumber = sev.payload.groupID;
+			questionNumber = sev.payload.questionID;    
 			questionURL = sev.payload.questionURL;
-			answeredCorrectly = sev.payload.answeredCorrectly; 
-			correctAnswer = sev.payload.correctAnswer;
+			answeredCorrectly = sev.payload.answeredCorrectly;   
+			chosenTags = sev.payload.chosenTags;
+			//correctAnswer = sev.payload.correctAnswer;
 			answer = sev.payload.groupAnswer;
 			rationale = sev.payload.rationale;
 			
@@ -281,7 +337,7 @@ Dalite = {
 			questionAnswer = $('td#'+answeredQuestionCellId+' div#questionAnswer');
 			questionImage = $('<img src="'+questionURL+'"/>');
 			questionAnswer.html(questionImage);
-			questionAnswer.append("<div>Group Answer: "+answer+ "<br/>Correct Answer: "+correctAnswer+"<br/>Rationale: "+rationale+"</div>")
+			questionAnswer.append("<div>Group Answer: "+answer+ "<br/><br/>Chosen Tags: "+chosenTags+"<br/><br/>Rationale: "+rationale+"</div>")
 			questionAnswer.css ('display', 'none');
 			
 			

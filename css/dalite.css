@@ -1,10 +1,12 @@
 /* CSS for student homework page */
-div#topRow {   
+div#topRow {    
+	display: none;
 	float: left;
 	width: 900px;
 } 
 
 div#bottomRow {  
+	display: none;
 	float: left;
 	width: 900px
 }             
@@ -41,7 +43,10 @@ div#submit {
 	margin-left: 20px;
 	margin-top: 190px;	
 }
-   
+         
+div#questionID {
+	display: none;	
+}
 
 /* CSS for Teach Dashboard */
               
@@ -71,7 +76,7 @@ td.questionCell {
 div#answerToSelectedQuestion {
 	float: right;
 	margin-top: 50px;
-	margin-right: 50px;
+	margin-right: 250px;
 	width: 400px;
 }
 
