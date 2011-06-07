@@ -4,8 +4,8 @@ Dalite = {
     rollcallURL: 'http://rollcall.proto.encorelab.org',
     xmppDomain: 'proto.encorelab.org',
     //groupchatRoom: 's3@conference.proto.encorelab.org',
-	groupchatRoom: 'physics@conference.proto.encorelab.org',
-	// groupchatRoom: 'run-2@conference.proto.encorelab.org',
+	// groupchatRoom: 'physics@conference.proto.encorelab.org',
+	groupchatRoom: 'run-2@conference.proto.encorelab.org',
     
     
     // private global vars
