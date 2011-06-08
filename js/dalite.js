@@ -267,7 +267,54 @@ Dalite = {
 			curQuestionID = sev.payload.questionID;
 			questionURL = sev.payload.questionURL;     
 			tags = sev.payload.tags;
-			choices = sev.payload.choices; 
+			choices = sev.payload.choices;     
+			
+			// We need to check and see if this is a question assigned to a GROUP or and INDIVIDUAL
+			// A group question comes with some more data regarding how individuals answered the question
+			// and therefore it needs to draw a chart with their answers
+			pastAnswers = sev.payload.past_answers;   
+			    
+			if (pastAnswers.length > 0 ){
+				var data = new google.visualization.DataTable();
+				data.addColumn('string', 'choice');
+				data.addColumn('number', 'total answers');
+				// this map holds the aggregate of all the given answers in order to be plotted on the graph
+				selectedChoicesMap = {};  
+
+				for (i=0; i<pastAnswers.length; i++){
+					curAnswer = pastAnswers[i]['choice'];
+					if (!selectedChoicesMap[curAnswer]) {
+						selectedChoicesMap[curAnswer] = 1;
+					} else {                                  					
+						selectedChoicesMap[curAnswer] += 1;
+					}               
+				} 
+				data.addRow([   
+				   $.each(selectedChoicesMap, function(index, value) { 
+				     document.write("['"+index +"', " + value + "]");
+				   })]);
+				   // for (i=0; i<selectedChoicesMap.length; i++){          
+				   // 						debugger
+				   // 				   		documnet.write("['"+selectedChoicesMap[i]+"',]");
+				   // 				   }                                                     
+			} 
+			
+			// Create our data table.
+		      var data = new google.visualization.DataTable();
+			data.addColumn('string', 'Task');
+			data.addColumn('number', 'Hours per Day');
+			data.addRows([
+			  ['Work', 11],
+			  ['Eat', 2],
+			  ['Commute', 2],
+			  ['Watch TV', 2],
+			  ['Sleep', {v:7, f:'7.000'}]
+			]);                                              
+
+
+		      // Instantiate and draw our chart, passing in some options.
+		      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+		      chart.draw(data, {width: 400, height: 240});
 			                                    
 			// we need to save the current question's id in a hidden field to send when question answered
 			$('#questionID').html(curQuestionID);
