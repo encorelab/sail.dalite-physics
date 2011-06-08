@@ -61,28 +61,36 @@ class Inquisitor < Sail::Agent
       
       login = Util.extract_login(stanza.from)
       
-      u = User.find(login)
+      u = nil
       
-      a = {
-        :run_id => @run_id,
-        :question_id => payload['questionID'],
-        :tags => payload['chosenTags'],
-        :choice => payload['choice'],
-        :rationale => payload['rationale'],
-        :timestamp => Time.now,
-        :user => {
-          :id => u.id,
-          :login => u.account.login,
-          :jid => stanza.from.to_s
+      begin
+        u = User.find(login)
+      rescue ActiveResource::ResourceNotFound
+        log "#{login} is not a user... ignoring"
+      end
+      
+      if u
+        a = {
+          :run_id => @run_id,
+          :question_id => payload['questionID'],
+          :tags => payload['chosenTags'],
+          :choice => payload['choice'],
+          :rationale => payload['rationale'],
+          :timestamp => Time.now,
+          :user => {
+            :id => u.id,
+            :login => u.account.login,
+            :jid => stanza.from.to_s
+          }
         }
-      }
       
-      answers.insert(a)
+        answers.insert(a)
       
-      u.question_answered!(payload['questionID'])
-      u.reload
+        u.question_answered!(payload['questionID'])
+        u.reload
       
-      do_homework(u)
+        do_homework(u)
+      end
     end
     
     event :group_question_answered? do |stanza, payload|
@@ -101,29 +109,28 @@ class Inquisitor < Sail::Agent
       end
 
       if g
-
-      a = {
-        :run_id => @run_id,
-        :question_id => payload['questionID'],
-        :tags => payload['chosenTags'],
-        :question_url => payload['questionURL'],
-        :correct => payload['answeredCorrectly'] == true || payload['answeredCorrectly'] == 'true',
-        :choice => payload['groupAnswer'] || payload['choice'],
-        :rationale => payload['rationale'],
-        :timestamp => Time.now,
-        :group => {
-          :id => g.id,
-          :login => g.account.login,
-          :jid => stanza.from.to_s
+        a = {
+          :run_id => @run_id,
+          :question_id => payload['questionID'],
+          :tags => payload['chosenTags'],
+          :question_url => payload['questionURL'],
+          :correct => payload['answeredCorrectly'] == true || payload['answeredCorrectly'] == 'true',
+          :choice => payload['groupAnswer'] || payload['choice'],
+          :rationale => payload['rationale'],
+          :timestamp => Time.now,
+          :group => {
+            :id => g.id,
+            :login => g.account.login,
+            :jid => stanza.from.to_s
+          }
         }
-      }
       
-      answers.insert(a)
+        answers.insert(a)
       
-      g.question_answered!(payload['questionID'])
-      g.reload
+        g.question_answered!(payload['questionID'])
+        g.reload
       
-      do_groupwork(g)
+        do_groupwork(g)
       end      
     end
     
@@ -245,6 +252,7 @@ class Inquisitor < Sail::Agent
     else
       q = nil
       begin
+        log "Retrieving question #{question_id_to_assign.inspect}..."
         q = JSON.parse(@arlo["questions/#{question_id_to_assign}.json"].get)['question']
       rescue => e
         log "Couldn't retrieve question #{question_id_to_assign} from Arlo! #{e}", :ERROR
