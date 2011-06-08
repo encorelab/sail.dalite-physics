@@ -4,8 +4,8 @@ Dalite = {
     rollcallURL: 'http://rollcall.proto.encorelab.org',
     xmppDomain: 'proto.encorelab.org',
     //groupchatRoom: 's3@conference.proto.encorelab.org',
-	// groupchatRoom: 'physics@conference.proto.encorelab.org',
-	groupchatRoom: 'run-2@conference.proto.encorelab.org',
+	groupchatRoom: 'physics@conference.proto.encorelab.org',
+	// groupchatRoom: 'run-6@conference.proto.encorelab.org',
     
     
     // private global vars
@@ -30,6 +30,7 @@ Dalite = {
         $('#watch').click(function() {$(Dalite).trigger('choseToWatch')})
   
 		$('#submitButton').click(function() {Dalite.submitAnswer();})   
+		$('#submitButton').click(function() {Dalite.submitGroupAnswer();})   
 		$('.questionCell').live('click', function(ev) {Dalite.showAnswer(ev);})   
 		
 		$('#loadGroups').click(function() {Dalite.loadGroups();})
@@ -105,7 +106,25 @@ Dalite = {
 	        Dalite.groupchat.sendEvent(sev);   
 	        $(Dalite).trigger('questionAnswered'); 
 		}
-	},  
+	}, 
+	
+	// the name for this function should indicate an 'action'
+	submitGroupAnswer: function () {    
+		questionID = $('#questionID').html();
+		tags = $(':checkbox').filter (':checked').map(function(){
+			return $(this).val();
+		});           
+		choice = $(':radio:checked').val();
+		rationale = $('textarea#rationaleText').val();   
+		// Check to see an answer is chosen, at least one tag is selected and rationale is provided
+		if (tags.length == 0 || choice == null || rationale == ""){
+			alert ("You must submit a CHOICE, select at least one TAG and provide a RATIONALE");  
+		} else {		    
+			sev = new Sail.Event('group_question_answered', {'questionID' : questionID, 'chosenTags' : $.makeArray(tags), 'choice' : choice, 'rationale' : rationale} );     
+	        Dalite.groupchat.sendEvent(sev);   
+	        $(Dalite).trigger('questionAnswered'); 
+		}
+	}, 
 	
 	// Loading all the groups for THIS RUN using a jquery call to RollCall
 	loadGroups: function() {               
@@ -272,49 +291,32 @@ Dalite = {
 			// We need to check and see if this is a question assigned to a GROUP or and INDIVIDUAL
 			// A group question comes with some more data regarding how individuals answered the question
 			// and therefore it needs to draw a chart with their answers
-			pastAnswers = sev.payload.past_answers;   
-			    
-			if (pastAnswers.length > 0 ){
-				var data = new google.visualization.DataTable();
-				data.addColumn('string', 'choice');
-				data.addColumn('number', 'total answers');
-				// this map holds the aggregate of all the given answers in order to be plotted on the graph
-				selectedChoicesMap = {};  
-
-				for (i=0; i<pastAnswers.length; i++){
-					curAnswer = pastAnswers[i]['choice'];
-					if (!selectedChoicesMap[curAnswer]) {
-						selectedChoicesMap[curAnswer] = 1;
-					} else {                                  					
-						selectedChoicesMap[curAnswer] += 1;
-					}               
-				} 
-				data.addRow([   
-				   $.each(selectedChoicesMap, function(index, value) { 
-				     document.write("['"+index +"', " + value + "]");
-				   })]);
-				   // for (i=0; i<selectedChoicesMap.length; i++){          
-				   // 						debugger
-				   // 				   		documnet.write("['"+selectedChoicesMap[i]+"',]");
-				   // 				   }                                                     
-			} 
-			
-			// Create our data table.
-		      var data = new google.visualization.DataTable();
-			data.addColumn('string', 'Task');
-			data.addColumn('number', 'Hours per Day');
-			data.addRows([
-			  ['Work', 11],
-			  ['Eat', 2],
-			  ['Commute', 2],
-			  ['Watch TV', 2],
-			  ['Sleep', {v:7, f:'7.000'}]
-			]);                                              
-
-
-		      // Instantiate and draw our chart, passing in some options.
-		      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-		      chart.draw(data, {width: 400, height: 240});
+			// pastAnswers = sev.payload.past_answers;   
+			// 			    
+			// 			if (pastAnswers.length > 0 ){                
+			// 				google.load('visualization', '1', {'packages':['columnchart']}); 
+			// 
+			// 			  	// Set a callback to run when the Google Visualization API is loaded.
+			// 				google.setOnLoadCallback(drawChart);       
+			// 				
+			// 			} 
+			// 			
+			// 			// Create our data table.
+			// 		      var data = new google.visualization.DataTable();
+			// 			data.addColumn('string', 'Task');
+			// 			data.addColumn('number', 'Hours per Day');
+			// 			data.addRows([
+			// 			  ['Work', 11],
+			// 			  ['Eat', 2],
+			// 			  ['Commute', 2],
+			// 			  ['Watch TV', 2],
+			// 			  ['Sleep', {v:7, f:'7.000'}]
+			// 			]);                                              
+			// 
+			// 
+			// 		      // Instantiate and draw our chart, passing in some options.
+			// 		      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+			// 		      chart.draw(data, {width: 400, height: 240}); 
 			                                    
 			// we need to save the current question's id in a hidden field to send when question answered
 			$('#questionID').html(curQuestionID);
@@ -349,7 +351,8 @@ Dalite = {
 				choiceDiv.append(choices[i]);
 			}  
 			// alert (choiceDiv);
-		}, 
+		},  
+		
 		
 		// When an individual is done with all their questions and the agent notifies them
 		onGotDone : function(ev, sev) {    
@@ -466,4 +469,28 @@ Dalite = {
 }    
 
 
+function drawChart(){
+	
+	var data = new google.visualization.DataTable();
+	data.addColumn('string', 'choice');
+	data.addColumn('number', 'total answers');
+	// this map holds the aggregate of all the given answers in order to be plotted on the graph
+	selectedChoicesMap = {};  
 
+	for (i=0; i<pastAnswers.length; i++){
+		curAnswer = pastAnswers[i]['choice'];
+		if (!selectedChoicesMap[curAnswer]) {
+			selectedChoicesMap[curAnswer] = 1;
+		} else {                                  					
+			selectedChoicesMap[curAnswer] += 1;
+		}               
+	} 
+	data.addRow([   
+   $.each(selectedChoicesMap, function(index, value) { 
+     document.write("['"+index +"', " + value + "]");
+   })]);   
+	   // for (i=0; i<selectedChoicesMap.length; i++){          
+	   // 						debugger
+	   // 				   		documnet.write("['"+selectedChoicesMap[i]+"',]");
+	   // 				   }
+}
