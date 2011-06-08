@@ -363,6 +363,7 @@ class Inquisitor < Sail::Agent
       'questionID' => q['id'],
       'questionURL' => ENV['ARLO_URL'] + q['image_path'],
       'tags' => tags.collect{|t| t['name']},
+      'correct_answer' => q['correct_answer'],
       'choices' => choices,
       'past_answers' => past_answers
     }
