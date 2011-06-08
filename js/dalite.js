@@ -30,7 +30,7 @@ Dalite = {
         $('#watch').click(function() {$(Dalite).trigger('choseToWatch')})
   
 		$('#submitButton').click(function() {Dalite.submitAnswer();})   
-		$('#submitButton').click(function() {Dalite.submitGroupAnswer();})   
+		$('#submitGroupButton').click(function() {Dalite.submitGroupAnswer();})   
 		$('.questionCell').live('click', function(ev) {Dalite.showAnswer(ev);})   
 		
 		$('#loadGroups').click(function() {Dalite.loadGroups();})
@@ -122,7 +122,7 @@ Dalite = {
 		} else {		    
 			sev = new Sail.Event('group_question_answered', {'questionID' : questionID, 'chosenTags' : $.makeArray(tags), 'choice' : choice, 'rationale' : rationale} );     
 	        Dalite.groupchat.sendEvent(sev);   
-	        $(Dalite).trigger('questionAnswered'); 
+	        $(Dalite).trigger('groupQuestionAnswered'); 
 		}
 	}, 
 	
@@ -270,6 +270,13 @@ Dalite = {
 	    	$('button#submitButton span').html('Sent...');    
 			
 		},
+		
+		// the name should indicate an 'event' - past tense
+  		onGroupQuestionAnswered: function () {        
+			$('button#submitGroupButton').effect("highlight", {color:"#b1b1b1"}, 3000);  
+	    	$('button#submitGroupButton span').html('Sent...');    
+			
+		},
 		  
 		// When individuals receive a question
 		onGotQuestion: function (ev, sev) {  
@@ -291,17 +298,100 @@ Dalite = {
 			// We need to check and see if this is a question assigned to a GROUP or and INDIVIDUAL
 			// A group question comes with some more data regarding how individuals answered the question
 			// and therefore it needs to draw a chart with their answers
-			// pastAnswers = sev.payload.past_answers;   
-			// 			    
-			// 			if (pastAnswers.length > 0 ){                
-			// 				google.load('visualization', '1', {'packages':['columnchart']}); 
+			// pastAnswers = sev.payload.past_answers;     
+			// 			
+			// 			if (pastAnswers.length > 0){  
+			// 				selectedChoicesMap = {};
+			// 				for (i=0; i< pastAnswers.length; i++){
+			// 					curAnswer = pastAnswers[i]['choice'];
+			// 					if (!selectedChoicesMap[curAnswer]) {
+			// 						selectedChoicesMap[curAnswer] = 1;
+			// 					} else {                                  					
+			// 						selectedChoicesMap[curAnswer] += 1;
+			// 					}               
+			// 				}        
+			// 				
+			// 				// loop through extracted choices by individual students to build our table of answers   
+			// 				// answerTable = $('<table id="studentAnswers">');
+			// 				answerTable = $('#studentAnswers');
+			// 				totalChoiceRow = $('<tr>');
+			// 				counter = 0;
+			// 				for(choice in selectedChoicesMap) { 
+			// 					curChoiceTally = selectedChoicesMap[choice];
+			// 				    curChoice = $('<td>'+choice+' : '+curChoiceTally+'</td>');
+			// 					totalChoiceRow.append(curChoice);
+			// 					counter++;
+			// 				}          
+			// 				answerTable.append(totalChoiceRow);      
+			// 				
+			// 				// We now need to loop through all answers, find all the ones with the same choices and tally up their tags             
+			// 				tagTrs = $('<tr>');
+			// 				$.each(selectedChoicesMap, function(index, value) { 
+			// 					curChoice = index; 
+			// 					curTagTally = {};          
+			// 					answerCounter = 0;            
+			// 					for (answers in pastAnswers) {    
+			// 						if (pastAnswers[answerCounter]['choice'] == curChoice){ 
+			// 							curTags = pastAnswers[answerCounter]['tags'];
+			// 							// loop through the tags to tally them up   
+			// 							$.each(curTags, function(index, value) { 
+			// 								if (!curTagTally[value]){
+			// 									curTagTally[value] = 1;
+			// 								} else {
+			// 									curTagTally[value] += 1;
+			// 								}
+			// 							});  
+			// 							// need put these data in the first TD of the table (below the first choice) 
+			// 							debugger
+			// 							// curTagTd = $('<td>'+curTagTally+'</td>');
+			// 							curTagTd = $('<td>Testing: 2</td>');
+			// 							tagTrs.append(curTagTd);
+			// 							
+			// 						}
+			// 						answerCounter ++;						
+			// 					}
+			// 				});  
+			// 				answerTable.append(tagsTrs);
+			// 			}
+			    
+			// THIS WAS AN ATTEMPT AT SHOWING THE VISUALIZATIONS BUT WE HAD TO GO WITH A SIMPLE TABLE
+			        
+			// if (pastAnswers.length > 0 ){                
+			// 				google.load('visualization', '1', {'packages':['corechart']}); 
 			// 
 			// 			  	// Set a callback to run when the Google Visualization API is loaded.
-			// 				google.setOnLoadCallback(drawChart);       
-			// 				
-			// 			} 
-			// 			
-			// 			// Create our data table.
+			// 				google.setOnLoadCallback(function (){
+			// 					var data = new google.visualization.DataTable();
+			// 					data.addColumn('string', 'choice');
+			// 					data.addColumn('number', 'total answers');
+			// 					// this map holds the aggregate of all the given answers in order to be plotted on the graph
+			// 					selectedChoicesMap = {};  
+			// 
+			// 					for (i=0; i<pastAnswers.length; i++){
+			// 						curAnswer = pastAnswers[i]['choice'];
+			// 						if (!selectedChoicesMap[curAnswer]) {
+			// 							selectedChoicesMap[curAnswer] = 1;
+			// 						} else {                                  					
+			// 							selectedChoicesMap[curAnswer] += 1;
+			// 						}               
+			// 					}   
+			// 					alert (selectedChoicesMap);
+			// 				    // data.addRow([   
+			// 				    // 				   $.each(selectedChoicesMap, function(index, value) { 
+			// 				    // 				     document.write("['"+index +"', " + value + "]");
+			// 				    // 				   })]);  data.addRow([   
+			// 				   // $.each(selectedChoicesMap, function(index, value) { 
+			// 				   // 				     document.write("['"+index +"', " + value + "]");
+			// 				   // 				   })]);   
+			// 					   // for (i=0; i<selectedChoicesMap.length; i++){          
+			// 					   // 						debugger
+			// 					   // 				   		documnet.write("['"+selectedChoicesMap[i]+"',]");
+			// 					   // 				   }
+			// 				});       
+				
+			// } 
+			
+			// // Create our data table.
 			// 		      var data = new google.visualization.DataTable();
 			// 			data.addColumn('string', 'Task');
 			// 			data.addColumn('number', 'Hours per Day');
@@ -316,13 +406,14 @@ Dalite = {
 			// 
 			// 		      // Instantiate and draw our chart, passing in some options.
 			// 		      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-			// 		      chart.draw(data, {width: 400, height: 240}); 
+			// 		      chart.draw(data, {width: 400, height: 240});               
 			                                    
 			// we need to save the current question's id in a hidden field to send when question answered
 			$('#questionID').html(curQuestionID);
 			     
 			$('textArea#rationaleText').val('');
-	    	$('button#submitButton span').html('Submit');
+	    	$('button#submitButton span').html('Submit');  
+			$('button#submitGroupButton span').html('Submit');
 			
 			// update the question with the new question
 			$('#questionImage').attr('src', questionURL); 
@@ -466,31 +557,4 @@ Dalite = {
     },
     
     
-}    
-
-
-function drawChart(){
-	
-	var data = new google.visualization.DataTable();
-	data.addColumn('string', 'choice');
-	data.addColumn('number', 'total answers');
-	// this map holds the aggregate of all the given answers in order to be plotted on the graph
-	selectedChoicesMap = {};  
-
-	for (i=0; i<pastAnswers.length; i++){
-		curAnswer = pastAnswers[i]['choice'];
-		if (!selectedChoicesMap[curAnswer]) {
-			selectedChoicesMap[curAnswer] = 1;
-		} else {                                  					
-			selectedChoicesMap[curAnswer] += 1;
-		}               
-	} 
-	data.addRow([   
-   $.each(selectedChoicesMap, function(index, value) { 
-     document.write("['"+index +"', " + value + "]");
-   })]);   
-	   // for (i=0; i<selectedChoicesMap.length; i++){          
-	   // 						debugger
-	   // 				   		documnet.write("['"+selectedChoicesMap[i]+"',]");
-	   // 				   }
-}
+}   
