@@ -22,7 +22,11 @@ class User < Rollcall::User
   end
   
   def last_unanswered_question_id
-    self.metadata.last_unanswered_question_id
+    begin
+      self.metadata.last_unanswered_question_id
+    rescue NoMethodError
+      return nil
+    end
   end
   
   def homework_completed?
@@ -61,6 +65,53 @@ class User < Rollcall::User
 end
 
 class Group < Rollcall::Group
+  
+  def has_assigned_list_of_questions?
+    begin
+      not self.metadata.assigned_question_ids.blank?
+    rescue NoMethodError
+      return false
+    end
+  end
+  
+  def assign_list_of_questions!(question_ids)
+    self.metadata.assigned_question_ids = question_ids.join(",")
+    self.save
+  end
+  
+  def assigned_list_of_questions
+    begin
+      list = self.metadata.assigned_question_ids
+      return list.blank? ? [] : list.split(",")
+    rescue NoMethodError
+      return []
+    end
+  end
+  
+  def last_unanswered_question_id
+    begin
+      self.metadata.last_unanswered_question_id
+    rescue NoMethodError
+      return nil
+    end
+  end
+  
+  def question_assigned!(question_id)
+    self.metadata.last_unanswered_question_id = question_id
+    self.save
+  end
+  
+  def question_answered!(question_id)
+    begin
+      last_unanswered = self.metadata.last_unanswered_question_id
+      if last_unanswered.to_i == question_id.to_i
+        self.metadata.last_unanswered_question_id = nil
+        self.save
+      end
+    rescue NoMethodError
+    end
+  end
+  
 end
 
 class Expertise < Group

@@ -4,8 +4,8 @@ Dalite = {
     rollcallURL: 'http://rollcall.proto.encorelab.org',
     xmppDomain: 'proto.encorelab.org',
     //groupchatRoom: 's3@conference.proto.encorelab.org',
-	groupchatRoom: 'physics@conference.proto.encorelab.org',
-	// groupchatRoom: 'run-2@conference.proto.encorelab.org',
+	// groupchatRoom: 'physics@conference.proto.encorelab.org',
+	groupchatRoom: 'run-2@conference.proto.encorelab.org',
     
     
     // private global vars
@@ -222,6 +222,8 @@ Dalite = {
 	
             $(Dalite).trigger('choosingWhetherToWatchOrPlay')
             Dalite.ui.showDialog('#join-dialog')
+            
+            $('#loading').show()
         },
     
         onChoseToPlay: function() {
@@ -251,8 +253,9 @@ Dalite = {
 		},
 		  
 		// When individuals receive a question
-		onGotQuestion: function (ev, sev) {     
-			                                    
+		onGotQuestion: function (ev, sev) {  
+		    $('#loading').hide()   
+			
 			if ($('#topRow').css('display') == "none")  {
 				$('#topRow').css('display', 'block');
 			}                                     
