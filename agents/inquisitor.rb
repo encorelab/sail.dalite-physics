@@ -93,9 +93,15 @@ class Inquisitor < Sail::Agent
       
       login = Util.extract_login(stanza.from)
       
-      g = Group.find(login)
-      
-      
+      g = nil
+      begin
+        g = Group.find(login)
+      rescue ActiveResource::ResourceNotFound
+        log "#{login} is not a group... ignoring", :WARN
+      end
+
+      if g
+
       a = {
         :run_id => @run_id,
         :question_id => payload['questionID'],
@@ -118,6 +124,7 @@ class Inquisitor < Sail::Agent
       g.reload
       
       do_groupwork(g)
+      end      
     end
     
     event :done? do |stanza, payload|
