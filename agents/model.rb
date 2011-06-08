@@ -118,8 +118,8 @@ class Expertise < Group
   self.element_name = "group"
   
   def self.groups
-    #r = Rollcall::Run.find(RUN_ID)
-    Group.find(:all, :from => "/runs/#{RUN_ID}/groups", :params => {:kind => "Expertise"})
+    #r = Rollcall::Run.find(ENV['RUN_ID'])
+    Group.find(:all, :from => "/runs/#{ENV['RUN_ID']}/groups", :params => {:kind => "Expertise"})
   end
   
   def self.add_member_to_random(member)
