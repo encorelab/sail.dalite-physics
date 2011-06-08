@@ -7,11 +7,14 @@ require 'sail/daemon'
   :verbose => true
 )
 
-SAIL_ENV = :production
-RUN_ID = 2
-CMS_BASE_URL = "http://arlo.proto.encorelab.org"
+#RUN_ID = 2
+RUN_ID = 6
+ARLO_URL = "http://arlo.proto.encorelab.org"
+#ROLLCALL_URL = "http://rollcall.proto.encorelab.org"
+ROLLCALL_URL = "http://localhost:3000"
+XMPP_DOMAIN = "proto.encorelab.org"
 
 require 'inquisitor'
-@daemon << Inquisitor.new(:run_id => 2)
+@daemon << Inquisitor.new(:run_id => RUN_ID)
 
 @daemon.start

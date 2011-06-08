@@ -23,7 +23,7 @@ class Inquisitor < Sail::Agent
     
     @mongo = Mongo::Connection.new.db('dalite-physics')
     
-    @arlo = RestClient::Resource.new(CMS_BASE_URL)
+    @arlo = RestClient::Resource.new(ARLO_URL)
   end
   
   def logic
@@ -222,7 +222,7 @@ class Inquisitor < Sail::Agent
     
     data = {
       'questionID' => q['id'],
-      'questionURL' => CMS_BASE_URL + q['image_path'],
+      'questionURL' => ARLO_URL + q['image_path'],
       'tags' => tags.collect{|t| t['name']},
       'choices' => choices,
       'past_answers' => past_answers
