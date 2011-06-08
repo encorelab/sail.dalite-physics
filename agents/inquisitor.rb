@@ -88,9 +88,12 @@ class Inquisitor < Sail::Agent
     event :group_question_answered? do |stanza, payload|
       answers = @mongo['answers']
       
-      gid = payload['groupID']
-      g = Group.find(gid)
+      #gid = payload['groupID']
+      #g = Group.find(gid)
       
+      login = Util.extract_login(stanza.from)
+      
+      g = Group.find(login)
       
       
       a = {
