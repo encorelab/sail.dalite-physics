@@ -1,12 +1,12 @@
 /* CSS for student homework page */
 div#topRow {    
-/*	display: none;*/
+	display: none;
 	float: left;
 	width: 1200px;
 } 
 
 div#bottomRow {  
-/*	display: none;*/
+	display: none;
 	float: left;
 	width: 900px
 }             
