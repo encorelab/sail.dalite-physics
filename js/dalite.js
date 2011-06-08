@@ -5,7 +5,7 @@ Dalite = {
     xmppDomain: 'proto.encorelab.org',
     //groupchatRoom: 's3@conference.proto.encorelab.org',
 	// groupchatRoom: 'physics@conference.proto.encorelab.org',
-	groupchatRoom: 'run-6@conference.proto.encorelab.org',
+	groupchatRoom: 'run-2@conference.proto.encorelab.org',
     
     
     // private global vars
