@@ -136,8 +136,8 @@ Dalite = {
 		$('#loadGroups').css('display', 'none');
 		
 		// we have currently hard-coded the 'run id' and 'kind'
-	  	var run_id = 2
-		var kind = "Expertise"  
+	  	var run_id = 22
+		var kind = "Student"  
 		var totalQuestions = 5
 
 		$.ajax({
