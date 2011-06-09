@@ -12,9 +12,10 @@ div#bottomRow {
 }             
 
 div#question {  
-	float: left;
+	float: right;
 	width: 550px;
 	margin-left: 50px;	
+	clear: right;
 }          
 
 img#questionImage {
@@ -23,18 +24,46 @@ img#questionImage {
 
 table#studentAnswers {
 	
+}      
+
+
+div#chart_div {                                       
+	width: 500px;
+	height: 200px;
+	float: left; 
+	margin-left: 50px; 
+	margin-top: 50px;
 }
-  
+                
+h2#rationalesTitle {
+	margin-left: 50px;
+	margin-top: 20px;
+}
+
+div#answerRationales{
+	width: 400px; 
+	float: left; 
+	margin-left: 50px;
+}
+
+.singleRationale {    
+	width: 100%;
+	border: 1px solid black;
+	margin-bottom: 10px; 
+	padding: 5px;
+	float:right;
+}  
 div#tags {  
 	float: left;
-	width: 600px;
-	padding-top: 40px;
+	width: 100%; 
+	padding-left: 50px;
 }
 
 div#choices { 
 	float: left;
-	width: 400px;
-	margin-top: 50px; 
+	width: 100%;
+	margin-top: 30px; 
+	padding-left: 50px;
 }    
 
 div#rationale {
@@ -52,4 +81,8 @@ div#submit {
          
 div#questionID {
 	display: none;	
+}
+  
+div#correctAnswer {
+	display: none;
 }
