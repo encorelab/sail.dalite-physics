@@ -155,7 +155,7 @@ Dalite = {
 					curGroupRow.append($('<td>'+groups[i].group.account.login+ '</td>'));
 					for (j=0; j < curGroupQuestionIDs.length; j++) {
 						curQuestionCell = $('<td class="questionCell" id="gr'+groups[i].group.account.login+'_q'+curGroupQuestionIDs[j]+'">');
-						curQuestionCell.append($('<div class="questionNumber">'+j+'</div>'));
+						curQuestionCell.append($('<div class="questionNumber">'+(j+1)+'</div>'));
 						curQuestionCell.append($('<div id="questionAnswer"></div>')); 
 						curQuestionCell.append($('</td>'));
 						curGroupRow.append(curQuestionCell);
@@ -273,7 +273,8 @@ Dalite = {
 		// the name should indicate an 'event' - past tense
   		onQuestionAnswered: function () {        
 			$('button#submitButton').effect("highlight", {color:"#b1b1b1"}, 3000);  
-	    	$('button#submitButton span').html('Sent...');    
+	    	$('button#submitButton span').html('Sent...'); 
+	   		$('#answerRationales').html('');
 			
 		},
 		
@@ -391,7 +392,7 @@ Dalite = {
 			$('#questionImage').attr('src', questionURL); 
 			
 			//We need to dynamically create checkboxes for all the received tags
-			tagDiv = $('div#tags').html('<p><b>Tags</b></p>');   
+			tagDiv = $('div#tags').html('<p><b>Please indicate which concepts and physics principles you used to solve this problem</b></p>');   
 			table = $('<table>');
 			for (i=0; i<tags.length; i++) {
 				if (i % 3 == 0){         
