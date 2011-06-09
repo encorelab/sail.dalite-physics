@@ -273,16 +273,14 @@ Dalite = {
 		// the name should indicate an 'event' - past tense
   		onQuestionAnswered: function () {        
 			$('button#submitButton').effect("highlight", {color:"#b1b1b1"}, 3000);  
-	    	$('button#submitButton span').html('Sent...'); 
-	   		$('#answerRationales').html('');
-			
+	    	$('button#submitButton span').html('Sent...');			
 		},
 		
 		// the name should indicate an 'event' - past tense
   		onGroupQuestionAnswered: function () {        
 			$('button#submitGroupButton').effect("highlight", {color:"#b1b1b1"}, 3000);  
 	    	$('button#submitGroupButton span').html('Sent...');    
-			
+	   		$('#answerRationales').html('');
 		},
 		  
 		// When individuals receive a question
