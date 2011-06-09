@@ -9,7 +9,6 @@ require 'mongo'
 
 require 'model'
 
-require 'ruby-debug'
 
 $: << 'sail.rb/lib'
 require 'sail/agent'
