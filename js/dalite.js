@@ -152,7 +152,7 @@ Dalite = {
 					// console.log(groups[i]);                                                        
 					curGroupQuestionIDs = groups[i].group.metadata.assigned_question_ids.split(',');					
 					curGroupRow = $('<tr class="groupRow" id="gr'+groups[i].group.account.login+'">');
-					curGroupRow.append($('<td> Group ' +(i+1)+ '</td>'));
+					curGroupRow.append($('<td>'+groups[i].group.account.login+ '</td>'));
 					for (j=0; j < curGroupQuestionIDs.length; j++) {
 						curQuestionCell = $('<td class="questionCell" id="gr'+groups[i].group.account.login+'_q'+curGroupQuestionIDs[j]+'">');
 						curQuestionCell.append($('<div class="questionNumber">'+j+'</div>'));
