@@ -333,7 +333,10 @@ class Inquisitor < Sail::Agent
       if qs.empty?
         log "No unanswered questions left in expertise #{exp} for #{g}!", :ERROR
       else
-        new_question_ids << qs[rand(qs.size)]['id']
+        new_question_ids << qs.pop['id']
+        unless qs.empty?
+          new_question_ids << qs.pop['id']
+        end
       end
     end
     
