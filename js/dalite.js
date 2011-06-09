@@ -138,22 +138,23 @@ Dalite = {
 		// we have currently hard-coded the 'run id' and 'kind'
 	  	var run_id = 22
 		var kind = "Student"  
-		var totalQuestions = 5
+		// var totalQuestions = 5
 
 		$.ajax({
 		  dataType: 'jsonp',
 		  // url: 'http://rollcall.proto.encorelab.org/runs/'+run_id+'/groups.json?kind='+kind,
 		  url: 'http://10.0.1.17:3000/runs/'+run_id+'/groups.json?kind='+kind,
-		  success: function(data) { 
-			    groups = data;
+		  success: function(data) {
+			    groups = data;  
 				                
 				groupTable = $('table#groupTable');
 				for (i=0; i < groups.length; i++){ 
-					// console.log(groups[i]);
+					// console.log(groups[i]);                                                        
+					curGroupQuestionIDs = groups[i].group.metadata.assigned_question_ids.split(',');					
 					curGroupRow = $('<tr class="groupRow" id="gr'+groups[i].group.account.login+'">');
 					curGroupRow.append($('<td> Group ' +(i+1)+ '</td>'));
-					for (j=1; j <= totalQuestions; j++) {
-						curQuestionCell = $('<td class="questionCell" id="gr'+groups[i].group.account.login+'_q'+j+'">');
+					for (j=0; j < curGroupQuestionIDs.length; j++) {
+						curQuestionCell = $('<td class="questionCell" id="gr'+groups[i].group.account.login+'_q'+curGroupQuestionIDs[j]+'">');
 						curQuestionCell.append($('<div class="questionNumber">'+j+'</div>'));
 						curQuestionCell.append($('<div id="questionAnswer"></div>')); 
 						curQuestionCell.append($('</td>'));
