@@ -142,7 +142,8 @@ Dalite = {
 
 		$.ajax({
 		  dataType: 'jsonp',
-		  url: 'http://rollcall.proto.encorelab.org/runs/'+run_id+'/groups.json?kind='+kind,
+		  // url: 'http://rollcall.proto.encorelab.org/runs/'+run_id+'/groups.json?kind='+kind,
+		  url: 'http://10.0.1.17:3000/runs/'+run_id+'/groups.json?kind='+kind,
 		  success: function(data) { 
 			    groups = data;
 				                
