@@ -451,7 +451,7 @@ Dalite = {
 			
 			chosenTags = sev.payload.chosenTags;
 			//correctAnswer = sev.payload.correctAnswer;
-			answer = sev.payload.groupAnswer; 
+			answer = sev.payload.choice; 
 			correctAnswer = sev.payload.correct_answer;
 			answeredCorrectly = answer==correctAnswer
 			
