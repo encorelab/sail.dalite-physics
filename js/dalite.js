@@ -111,7 +111,7 @@ Dalite = {
 	// the name for this function should indicate an 'action'
 	submitGroupAnswer: function () {    
 		questionID = $('#questionID').html();   
-		groupID = Dalite.session.id;
+		groupID = Dalite.session.account.login;
 		questionURL = $('#questionURL').attr('src');   
 		correctAnswer = $('#correctAnswer').html();
 		tags = $(':checkbox').filter (':checked').map(function(){
@@ -149,10 +149,10 @@ Dalite = {
 				groupTable = $('table#groupTable');
 				for (i=0; i < groups.length; i++){ 
 					// console.log(groups[i]);
-					curGroupRow = $('<tr class="groupRow" id="gr'+groups[i].group.id+'">');
+					curGroupRow = $('<tr class="groupRow" id="gr'+groups[i].group.account.login+'">');
 					curGroupRow.append($('<td> Group ' +(i+1)+ '</td>'));
 					for (j=1; j <= totalQuestions; j++) {
-						curQuestionCell = $('<td class="questionCell" id="gr'+groups[i].group.id+'_q'+j+'">');
+						curQuestionCell = $('<td class="questionCell" id="gr'+groups[i].group.account.login+'_q'+j+'">');
 						curQuestionCell.append($('<div class="questionNumber">'+j+'</div>'));
 						curQuestionCell.append($('<div id="questionAnswer"></div>')); 
 						curQuestionCell.append($('</td>'));
