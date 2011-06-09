@@ -112,7 +112,7 @@ Dalite = {
 	submitGroupAnswer: function () {    
 		questionID = $('#questionID').html();   
 		groupID = Dalite.session.account.login;
-		questionURL = $('#questionURL').attr('src');   
+		questionURL = $('div#question img').attr('src');   
 		correctAnswer = $('#correctAnswer').html();
 		tags = $(':checkbox').filter (':checked').map(function(){
 			return $(this).val();
