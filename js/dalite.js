@@ -136,14 +136,14 @@ Dalite = {
 		$('#loadGroups').css('display', 'none');
 		
 		// we have currently hard-coded the 'run id' and 'kind'
-	  	var run_id = 22
+	  	var run_id = 2
 		var kind = "Student"  
 		// var totalQuestions = 5
 
 		$.ajax({
 		  dataType: 'jsonp',
 		  // url: 'http://rollcall.proto.encorelab.org/runs/'+run_id+'/groups.json?kind='+kind,
-		  url: 'http://10.0.1.17:3000/runs/'+run_id+'/groups.json?kind='+kind,
+		  url: 'http://rollcall.proto.encorelab.org/runs/'+run_id+'/groups.json?kind='+kind,
 		  success: function(data) {
 			    groups = data;  
 				                
